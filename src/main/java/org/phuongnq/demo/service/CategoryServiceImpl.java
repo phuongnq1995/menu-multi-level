@@ -23,4 +23,8 @@ public class CategoryServiceImpl implements CategoryService{
 		return repository.getChildren(id);
 	}
 	
+	public List<CategoryEntity> findAll(){
+		return repository.findAll();
+	}
+	
 }

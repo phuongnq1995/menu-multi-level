@@ -10,4 +10,6 @@ public interface CategoryService {
 
 	public List<CategoryEntity> getChildren(long id);
 	
+	public List<CategoryEntity> findAll();
+	
 }
