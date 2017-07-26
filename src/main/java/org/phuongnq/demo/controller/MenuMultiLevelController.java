@@ -32,7 +32,9 @@ public class MenuMultiLevelController {
 	
 	@RequestMapping("/")
 	public String home(Model model){
-		model.addAttribute("categories", service.findListOriginals());
+		List<CategoryEntity> categories = service.findListOriginals();
+		model.addAttribute("categories", categories);
+		model.addAttribute("parentId", 0);
 		return "home";
 	}
 	
@@ -40,7 +42,8 @@ public class MenuMultiLevelController {
     public ModelAndView getChildren(@PathVariable long id , Model model ) {
     	List<CategoryEntity> categories = service.getChildren(id);
     	if(categories.size() > 0 ){
-    		model.addAttribute("categories", service.getChildren(id));
+    		model.addAttribute("categories", categories);
+    		model.addAttribute("parentId", categories.get(0).getParent().getId());
     		return new ModelAndView( "_category" );
     	}
     	return null;

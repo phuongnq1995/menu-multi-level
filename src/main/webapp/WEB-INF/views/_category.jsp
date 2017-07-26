@@ -2,17 +2,27 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ page isELIgnored="false"%>
-<c:set var="parentId" value="${categories.get(0).getParent() == null ? 0 : categories.get(0).getParent().getId()}"></c:set>
 	<c:forEach var="category" items="${categories}">
-		<div id="${category.getId()}" class="category-${parentId}" >
+		<li class="item-${category.getId()} deeper parent">
+            <a class="" href="#">
+                 <span data-toggle="collapse" data-parent="#menu-group-${parentId}" 
+                 	href="#sub-item-${category.getId()}" class="sign" >
+                 	<i class="fa fa-angle-double-right" id="span-${category.getId()}" style="font-size:18px;"> </i></span>
+                 <span class="lbl">${category.getName()}</span>
+            </a>
+            <ul class="children nav-child unstyled small collapse parent-${parentId}" id="sub-item-${category.getId()}">
+            </ul>
+       	</li>
+		<%-- <div id="${category.getId()}" class="category-${parentId}" >
 			${category.getName()}<br>
 			<div id="response-${category.getId()}" style="padding-left: 15px;"></div>
-		</div>
+		</div> --%>
+		
 	</c:forEach>
 <script type="text/javascript">
 var parentId = ${parentId};
-$(".category-"+parentId).each(function(index) {
-	var id = $(this).attr("id");
+$(".parent-"+parentId).each(function(index) {
+	var id = $(this).attr("id").replace ( /[^\d.]/g, '' );
 	$.ajax({
 	    url: 'http://localhost:8080/org.phuongnq.demo/getChildren/'+id,
 	    type : "GET",
@@ -20,7 +30,12 @@ $(".category-"+parentId).each(function(index) {
 		cache : false,
 		async: false,
 		success : function(data) {
-			$("#response-"+id).html(data);
+			if(data != ''){
+				$("#sub-item-"+id).html(data);
+			}else{
+				$("#span-"+id).removeClass("fa-angle-double-right");
+				$("#span-"+id).addClass("fa-ban");
+			}
 		}
 	});
 });
