@@ -1,6 +1,7 @@
 package org.phuongnq.demo.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -28,8 +29,8 @@ public class CategoryEntity implements Serializable{
 	@JoinColumn(name="parent_id", nullable=true)
 	private CategoryEntity parent;
 
-	@OneToMany(mappedBy="parent")
-	private Set<CategoryEntity> children;
+	@OneToMany(mappedBy="parent", fetch=FetchType.EAGER)
+	private List<CategoryEntity> children;
 	
 	public long getId() {
 		return id;
@@ -55,11 +56,11 @@ public class CategoryEntity implements Serializable{
 		this.parent = parent;
 	}
 
-	public Set<CategoryEntity> getChildren() {
+	public List<CategoryEntity> getChildren() {
 		return children;
 	}
 
-	public void setChildren(Set<CategoryEntity> children) {
+	public void setChildren(List<CategoryEntity> children) {
 		this.children = children;
 	}
 	

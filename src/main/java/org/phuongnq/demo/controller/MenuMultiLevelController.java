@@ -8,12 +8,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.phuongnq.demo.model.CategoryEntity;
 import org.phuongnq.demo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +52,30 @@ public class MenuMultiLevelController {
     		return new ModelAndView( "_category" );
     	}
     	return null;
+    }
+    
+    @RequestMapping( method=RequestMethod.GET, value="/getalljson")
+    public ModelAndView jsonViewResult() throws JSONException {
+    	ModelAndView mav = new ModelAndView("jsonView");
+    	List<CategoryEntity> categories = service.findListOriginals();
+
+    	mav.addObject("children", jsonResult(categories, new JSONObject()).toString());
+    	return mav;
+    }
+    
+
+	private JSONArray jsonResult(List<CategoryEntity> categories, JSONObject jsonObject) throws JSONException{
+		JSONArray jsonArray = new JSONArray();
+		for(CategoryEntity category: categories){
+	    	JSONObject jsonchil = new JSONObject();
+			jsonchil.put("id", category.getId());
+			jsonchil.put("name", category.getName());
+			if(!category.getChildren().isEmpty()){
+	    		jsonchil.put("children", jsonResult(category.getChildren(), jsonObject));
+			}
+			jsonArray.put(jsonchil);
+	    }
+    	return jsonArray;
     }
     
     @RequestMapping("/export")
