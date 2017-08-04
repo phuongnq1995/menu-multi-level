@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.phuongnq.demo.model.CategoryEntity;
+import org.phuongnq.demo.model.SaleEntity;
 import org.phuongnq.demo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,13 @@ public class MenuMultiLevelController {
 		List<CategoryEntity> categories = service.findListOriginals();
 		model.addAttribute("categories", categories);
 		model.addAttribute("parentId", 0);
+		List<SaleEntity> sales = service.findByCategoryId(3);
+		int data[] = new int[12];
+		for(int i = 0; i< 12; i++){
+			data[i] = sales.get(i).getQuantity();
+		}
+		System.out.println("data:"+data.toString());
+		model.addAttribute("data", data);
 		return "home";
 	}
 	
@@ -59,7 +67,7 @@ public class MenuMultiLevelController {
     	ModelAndView mav = new ModelAndView("jsonView");
     	List<CategoryEntity> categories = service.findListOriginals();
 
-    	mav.addObject("children", jsonResult(categories, new JSONObject()).toString());
+    	mav.addObject("children", jsonResult(categories, new JSONObject()));
     	return mav;
     }
     

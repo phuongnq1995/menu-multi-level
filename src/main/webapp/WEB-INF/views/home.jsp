@@ -10,6 +10,10 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 </head>
@@ -189,7 +193,88 @@
 			</div>
 		</div>
 	</div>
-<script type="text/javascript">
+	
+<div class="container">
+<div id="render-div"></div>
+<div id="sliders">
+    <table>
+        <tr>
+        	<td>Alpha Angle</td>
+        	<td><input id="alpha" type="range" min="0" max="45" value="15"/> <span id="alpha-value" class="value"></span></td>
+        </tr>
+        <tr>
+        	<td>Beta Angle</td>
+        	<td><input id="beta" type="range" min="-45" max="45" value="15"/> <span id="beta-value" class="value"></span></td>
+        </tr>
+        <tr>
+        	<td>Depth</td>
+        	<td><input id="depth" type="range" min="20" max="100" value="50"/> <span id="depth-value" class="value"></span></td>
+        </tr>
+    </table>
+</div>
+</div>	
+<script type="text/javascript" charset="utf-8">
+
+
+//Set up the chart
+var chart = new Highcharts.Chart({
+	
+ chart: {
+     renderTo: 'render-div',
+     type: 'column',
+     options3d: {
+         enabled: true,
+         alpha: 15,
+         beta: 15,
+         depth: 50,
+         viewDistance: 25
+     }
+ },
+ title: {
+     text: 'Quantity sale in 2017'
+ },
+ subtitle: {
+     text: 'Chart for iphone'
+ },
+ xAxis: {
+     categories: Highcharts.getOptions().lang.shortMonths
+ },
+ yAxis: {
+     title: {
+         text: 'Products'
+     }
+ },
+ plotOptions: {
+     column: {
+         depth: 25
+     }
+ },
+ series: [{
+     data: [
+     	<%for(int i = 0; i< 12; i++){
+     		int data[] = (int[])request.getAttribute("data");
+     	%>	
+     		<%= data[i] +( i==11 ? "" : "," )%>
+     	<%} %>       
+     ]
+ }]
+});
+
+function showValues() {
+ $('#alpha-value').html(chart.options.chart.options3d.alpha);
+ $('#beta-value').html(chart.options.chart.options3d.beta);
+ $('#depth-value').html(chart.options.chart.options3d.depth);
+}
+
+//Activate the sliders
+$('#sliders input').on('input change', function () {
+ chart.options.chart.options3d[this.id] = parseFloat(this.value);
+ showValues();
+ chart.redraw(false);
+});
+
+showValues();
+
 !function ($) {
     
     $(document).on("click","#left ul.nav li.parent > a > span.sign", function(){          

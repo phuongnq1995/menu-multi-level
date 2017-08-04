@@ -13,11 +13,6 @@
             <ul class="children nav-child unstyled small collapse parent-${parentId}" id="sub-item-${category.getId()}">
             </ul>
        	</li>
-		<%-- <div id="${category.getId()}" class="category-${parentId}" >
-			${category.getName()}<br>
-			<div id="response-${category.getId()}" style="padding-left: 15px;"></div>
-		</div> --%>
-		
 	</c:forEach>
 <script type="text/javascript">
 var parentId = ${parentId};
